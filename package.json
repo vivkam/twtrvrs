@@ -1,0 +1,23 @@
+{
+	"name" : "twitter-backup",
+	"version" : "0.0.1",
+	"description" : "Twitter backup to CouchDB with query interface",
+	"author" : {
+		"name" : "Vivian Kam",
+		"email" : "otherviv@gmail.com"
+	},
+	"main" : "index.js",
+	"repository" : {
+		"type" : "git",
+		"url" : "git@bitbucket.org:vivkam/twitter-backup.git"
+	},
+	"keywords" : [ "twitter", "couchdb", "backup" ],
+	"dependencies" : {
+		"big-integer" : "",
+		"cradle" : "",
+		"deepmerge" : "",
+		"line-reader" : "",
+		"twitter" : "",
+		"underscore" : ""
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"couchdb" : {
+		"host" : "localhost",
+		"port" : 5984,
+		"database" : "twitter-default",
+		"cache" : true
+	},
+	"twitter" : {
+		"user_id_str" : "SET_THIS_VALUE",
+	    "consumer_key" : "SET_THIS_VALUE",
+	    "consumer_secret" : "SET_THIS_VALUE",
+	    "access_token_key" : "SET_THIS_VALUE",
+	    "access_token_secret" : "SET_THIS_VALUE"
+	},
+	"twitterExport" : {
+		"dir" : "/PATH/TO/TWITTER/ARCHIVE/EXPORT/"
+	},
+	"topsyExport" : {
+		"dir" : "/PATH/TO/TOPSY/API/OUTPUT/FILES/"
+	}
+}
