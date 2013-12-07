@@ -1,7 +1,7 @@
 {
 	"name" : "twitter-backup",
 	"version" : "0.0.1",
-	"description" : "Twitter backup to CouchDB with query interface",
+	"description" : "Your own personal Twitterverse in CouchDB.",
 	"author" : {
 		"name" : "Vivian Kam",
 		"email" : "otherviv@gmail.com"
