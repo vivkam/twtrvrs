@@ -1,19 +1,28 @@
 var util = require('util'),
-	action = process.argv.length > 2 ? process.argv[2] : null;
+	action = process.argv.length > 2 ? process.argv[2] : null,
+	newDb = false,
+	couch;
 
 if (!action) {
-	console.log('usage: node index.js [backup/server]');
+	console.log('usage: node index.js [dbviews|backup|server]');
 } else if (action === 'dbviews') {
-	require('./lib/couchdb.js').createOrUpdateViews(function (error, response) {
-		if (error) {
-			console.error('error creating views');
-			console.error(util.inspect(error));
-		} else {
-			console.log('view creation log: ');
-			console.log(util.inspect(response));
+	couch = require('./lib/couchdb.js');
+	couch.on('dbInitializing', function() {
+		newDb = true;
+	});
+	couch.on('dbReady', function() {
+		if (!newDb) {
+			couch.createOrUpdateViews(function (error, response) {
+				if (error) {
+					console.error('error creating views');
+					console.error(util.inspect(error));
+				} else {
+					console.log('view creation log: ');
+					console.log(util.inspect(response));
+				}
+			});
 		}
 	});
-
 } else if (action === 'topsy') {
 	require('./lib/import-topsy.js');
 } else if (action === 'backup') {
