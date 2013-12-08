@@ -1,18 +1,18 @@
 var util = require('util'),
 	action = process.argv.length > 2 ? process.argv[2] : null,
 	newDb = false,
-	couch;
+	module;
 
 if (!action) {
 	console.log('usage: node index.js [dbviews|backup|server]');
 } else if (action === 'dbviews') {
-	couch = require('./lib/couchdb.js');
-	couch.on('dbInitializing', function() {
+	module = require('./lib/couchdb.js');
+	module.on('dbInitializing', function() {
 		newDb = true;
 	});
-	couch.on('dbReady', function() {
+	module.on('dbReady', function() {
 		if (!newDb) {
-			couch.createOrUpdateViews(function (error, response) {
+			module.createOrUpdateViews(function (error, response) {
 				if (error) {
 					console.error('error creating views');
 					console.error(util.inspect(error));
@@ -26,7 +26,8 @@ if (!action) {
 } else if (action === 'topsy') {
 	require('./lib/import-topsy.js');
 } else if (action === 'backup') {
-	require('./lib/backup.js');	
+	module = require('./lib/backup.js');
+	module.run();
 } else if (action === 'server') {
 	console.log('server not yet implemented');
 } else {
