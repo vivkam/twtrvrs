@@ -23,11 +23,13 @@ if (!action) {
 			});
 		}
 	});
-} else if (action === 'topsy') {
-	require('./lib/import-topsy.js');
 } else if (action === 'backup') {
 	module = require('./lib/backup.js');
 	module.run();
+} else if (action === 'topsy') {
+	require('./lib/import-topsy.js');
+} else if (action === 'twitter') {
+	require('./lib/import-twitter.js');
 } else if (action === 'server') {
 	console.log('server not yet implemented');
 } else {
