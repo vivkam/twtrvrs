@@ -1,33 +1,38 @@
 twitter-backup
 
 Main Features:
-- backup of all my tweets + all related tweets
-- storage in database + human readable file(s)
+- backup all my tweets, related tweets, and related entities
+- storage in database
 - ability to search tweets
 
 Detailed Backup Features:
+- from topsy export (by me, @ me, search of me)
 - all my tweets
-
-Implementation:
-- Node.js
-- CouchDB
+- all my favorites
+- all mentions of me
 
 Configuration:
 - edit config-default.json or override with config.json
 
-To do:
-- all my tweets
-- all tweets at me (don't store repeats)
-- all retweets of me
-- all twitter images
-- all tweets that mention "soopahviv"
-- all my favorites
-- all users encountered
-  - entities.user_mentions
-  - mentions from users
-  - retweets from users
-- "manually" add user ids of people who favorite my tweets
-- parse and store results of http://t.co/ggnCZJNvOd links (header)
-- parse and index hashtags
+Implementation:
+- Node.js (see package.json for dependencies)
+- CouchDB
+
+To Do:
 - direct messages
-- run backup to dos
+- backup
+  - retweets of me (from backup queue)
+    - pull full user objects and save
+    - add retweeter user array to original tweet
+  - media (from queue or from tweet view?)
+  - tweets in queue
+  - users in queue
+- all tweets that mention "soopahviv"
+- "manually" add user ids of people who favorite my tweets
+- parse and index hashtags, urls, symbols (maybe just a view)
+- database to human readable file export
+- text search on tweet content
+- user interface
+
+> add process queue module
+> add completeness check module
