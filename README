@@ -10,6 +10,7 @@ Detailed Backup Features:
 - all my tweets
 - all my favorites
 - all mentions of me
+- all direct messages sent & received
 
 Configuration:
 - edit config-default.json or override with config.json
@@ -19,7 +20,6 @@ Implementation:
 - CouchDB
 
 To Do:
-- direct messages
 - backup
   - retweets of me (from backup queue)
     - pull full user objects and save
@@ -33,6 +33,7 @@ To Do:
 - database to human readable file export
 - text search on tweet content
 - user interface
+- are couchdb view reduce counts correct?
 
 > add process queue module
 > add completeness check module
