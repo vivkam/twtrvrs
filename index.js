@@ -26,6 +26,9 @@ if (!action) {
 } else if (action === 'backup') {
 	module = require('./lib/backup.js');
 	module.run();
+} else if (action === 'stream') {
+	module = require('./lib/backup.js');
+	module.stream();
 } else if (action === 'topsy') {
 	require('./lib/import-topsy.js');
 } else if (action === 'twitter') {

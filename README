@@ -20,6 +20,19 @@ Implementation:
 - CouchDB
 
 To Do:
+- read from user stream
+  - tweet
+    - how to tell if it's a tweet?
+    - save if user.id_str === my id
+    - save if text contains soopahviv
+  - direct_message : { dm body }
+  - event : 'follow'
+    - source : { me or user that followed me }
+    - target : { me or user i followed }
+  - event : 'favorite', 'unfavorite'
+    - source : { user that favorited my tweet }
+    - target_object.id_str : my tweet that got (un)favorited
+  - ignore the following >> event : 'delete', 'unfollow'
 - backup
   - retweets of me (from backup queue)
     - pull full user objects and save
@@ -29,11 +42,11 @@ To Do:
   - users in queue
 - all tweets that mention "soopahviv"
 - "manually" add user ids of people who favorite my tweets
-- parse and index hashtags, urls, symbols (maybe just a view)
 - database to human readable file export
 - text search on tweet content
 - user interface
 - are couchdb view reduce counts correct?
+- notify on error: email?
 
 > add process queue module
 > add completeness check module
