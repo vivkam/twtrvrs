@@ -20,6 +20,13 @@ Implementation:
 - CouchDB
 
 To Do:
+- name this: tipsyverse, tpsyvrs
+- switch backup:id to just regular ids with backupQueue:true (or similar) flag
+- _id:"stats" document
+  - backfilled: { tweets : true/false , mentions : true/false , etc. }
+  - sinceId: { tweets : "blah" , mentions : "blah" , etc. }
+  - ???: others?
+  - maybe flip hierarchy
 - read from user stream
   - tweet
     - how to tell if it's a tweet?
@@ -47,6 +54,7 @@ To Do:
 - user interface
 - are couchdb view reduce counts correct?
 - notify on error: email?
+- update twitter importer to convert date formats to new api format
 
 > add process queue module
 > add completeness check module
