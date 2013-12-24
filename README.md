@@ -46,7 +46,8 @@ Implementation
 Known Issues
 ------------
 
-- Archiving favorites on your tweets is troublesome if you're not streaming them as they happen.
+- Archiving favorites of your tweets is troublesome if you're not streaming them as they happen.
   - There's no way to query the Twitter API for all your tweets that have been favorited.
   - The Topsy API doesn't have favorite_count because they store the tweet they get from the firehose, which comes through when you post it, i.e. before anyone's had a chance to favorite it.
   - The Twitter export archive data does not contain favorite_count.
+- Archiving retweets of your tweets from the Topsy or Twitter export archive is not possible because of the aforementioned issues with the Topsy firehose and the Twitter export archive content.
