@@ -10,17 +10,20 @@ if (!action) {
 	module.on('dbInitializing', function() {
 		newDb = true;
 	});
-	module.on('dbReady', function() {
+	module.on('dbReady', function(db) {
 		if (!newDb) {
-			module.createOrUpdateViews(function (error, response) {
-				if (error) {
-					console.error('error creating views');
-					console.error(util.inspect(error));
-				} else {
-					console.log('view creation log: ');
-					console.log(util.inspect(response));
+			module.createOrUpdateViews(
+				db,
+				function (error, response) {
+					if (error) {
+						console.error('error creating views');
+						console.error(util.inspect(error));
+					} else {
+						console.log('view creation log: ');
+						console.log(util.inspect(response));
+					}
 				}
-			});
+			);
 		}
 	});
 } else if (action === 'backup') {
