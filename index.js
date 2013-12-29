@@ -30,9 +30,9 @@ if (!action) {
 	module = require('./lib/backup.js');
 	module.stream();
 } else if (action === 'topsy') {
-	require('./lib/import-topsy.js');
+	require('./import/topsy.js');
 } else if (action === 'twitter') {
-	require('./lib/import-twitter.js');
+	require('./import/twitter.js');
 } else if (action === 'server') {
 	console.log('server not yet implemented');
 } else {
