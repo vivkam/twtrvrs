@@ -6,7 +6,7 @@ var util = require('util'),
 if (!action) {
 	console.log('usage: node index.js [dbviews|backup|server]');
 } else if (action === 'dbviews') {
-	module = require('./lib/couchdb.js');
+	module = require('./database/couchdb.js');
 	module.on('dbInitializing', function() {
 		newDb = true;
 	});

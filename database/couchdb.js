@@ -24,7 +24,7 @@ var _      = require('underscore'),
 	util   = require('util'),
 	events = require('events'),
 	cradle = require('cradle'),
-	config = require('./config.js'),
+	config = require('../lib/config.js'),
 	couch,
 	db;
 
