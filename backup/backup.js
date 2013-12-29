@@ -5,9 +5,9 @@
 var _         = require('underscore'),
 	twitter   = require('twitter'),
 	bigInt    = require('big-integer'),
-	config    = require('./config.js').twitter,
-	util      = require('./util-uber.js'),
-	twitUtil  = require('./util-twitter.js'),
+	config    = require('../lib/config.js').twitter,
+	util      = require('../lib/util-uber.js'),
+	twitUtil  = require('../lib/util-twitter.js'),
 	couch     = require('../database/couchdb.js'),
 	db        = couch.db,
 	soopahviv = new twitter(config);

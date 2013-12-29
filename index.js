@@ -24,10 +24,10 @@ if (!action) {
 		}
 	});
 } else if (action === 'backup') {
-	module = require('./lib/backup.js');
+	module = require('./backup/backup.js');
 	module.run();
 } else if (action === 'stream') {
-	module = require('./lib/backup.js');
+	module = require('./backup/backup.js');
 	module.stream();
 } else if (action === 'topsy') {
 	require('./import/topsy.js');

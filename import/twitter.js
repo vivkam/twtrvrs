@@ -7,7 +7,7 @@
 var fs        = require('fs'),
 	util      = require('../lib/util-uber.js'),
 	twitUtil  = require('../lib/util-twitter.js'),
-	backup    = require('../lib/backup.js'),
+	backup    = require('../backup/backup.js'),
 	dir       = require('../lib/config.js').twitterExport.dir,
 	couch     = require('../database/couchdb.js'),
 	filenames = fs.readdirSync(dir),

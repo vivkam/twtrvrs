@@ -5,7 +5,7 @@
 var reader   = require('line-reader'),
 	util     = require('../lib/util-uber.js'),
 	twitUtil = require('../lib/util-twitter.js'),
-	backup   = require('../lib/backup.js'),
+	backup   = require('../backup/backup.js'),
 	dir      = require('../lib/config.js').topsyExport.dir,
 	couch    = require('../database/couchdb.js'),
 	db;
