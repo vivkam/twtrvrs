@@ -2,19 +2,15 @@
  * Backup tweets via Twitter API.
  */
 
-var _         = require('underscore'),
-	twitter   = require('twitter'),
+var twitter   = require('twitter'),
 	bigInt    = require('big-integer'),
+	persist   = require('./persist.js'),
 	config    = require('../lib/config.js').twitter,
 	util      = require('../lib/util-uber.js'),
 	twitUtil  = require('../lib/util-twitter.js'),
 	couch     = require('../database/couchdb.js'),
 	db        = couch.db,
 	soopahviv = new twitter(config);
-
-exports.backupRelatedEntities = backupRelatedEntities;
-exports.saveOrUpdateUser = saveOrUpdateUser;
-exports.saveToBackupQueue = saveToBackupQueue;
 
 /**
  * [When complete...]
@@ -37,7 +33,7 @@ exports.stream = function () {
 	if (couch.dbReady) {
 		stream();
 	} else {
-		couch.on('dbReady', function() {
+		couch.on('dbReady', function () {
 			stream();
 		});
 	}
@@ -164,33 +160,6 @@ function backupDirectMessages (type, callback) {
 	}
 }
 
-
-// soopahviv.get(
-// 	'/statuses/retweets/401527406457933824.json',
-// 	function (tweets) {
-// 		console.log(util.inspect(tweets, { depth : null }));
-// 	}
-// );
-
-// function backupUserQueue () {
-// 	userQueue = _.uniq(userQueue);
-// 	soopahviv.post(
-// 		'/users/lookup.json',
-// 		{
-// 			user_id : userQueue.join()
-// 		},
-// 		function (users) {
-// 			if (users instanceof Error) {
-// 				console.error('error fetching users: ' + users);
-// 			} else {
-// 				users.forEach(function (user) {
-// 					saveOrUpdateUser(user);
-// 				});
-// 			}
-// 		}
-// 	);
-// }
-
 /**
  * Backup tweets from Twitter endpoint.
  *
@@ -223,43 +192,15 @@ function backupFromTwitter (endpoint, parameters, type, stats, callback) {
 				callback(stats);
 			} else {
 				function saveNextItem () {
-					var item = items.shift(),
-						_id;
+					var item = items.shift();
 					if (item) {
-						_id = twitUtil.getIdForType(item, type);
-						util.removeEmptyProperties(item);
-						if (item.user) {
-							if (item.user.name) {
-								saveOrUpdateUser(item.user);	
-							}
-							item.user = twitUtil.getTrimmedUser(item.user);
-						}
-						if (item.sender) {
-							saveOrUpdateUser(item.sender);
-							delete item.sender;
-						}
-						if (item.recipient) {
-							saveOrUpdateUser(item.recipient);
-							delete item.recipient;
-						}
-						item.type = type;
-						db.put(_id, item, function (error, response) {
+						persist.saveItem(item, type, function (error, response) {
 							if (error && error.error === 'conflict') {
 								if (item.user && item.user.id_str === item.in_reply_to_user_id_str) {
 									// this happens when user mentions themself
 									saveNextItem();
 								} else {
-									overwriteBackup(_id, item, function (error, response) {
-										if (error) {
-											stats.error = error;
-										}
-										if (response === true) {
-											saveNextItem();
-										} else {
-											callback(stats);
-										}
-									});
-									
+									callback(stats);
 								}
 							} else if (error) {
 								stats.error = error;
@@ -269,7 +210,6 @@ function backupFromTwitter (endpoint, parameters, type, stats, callback) {
 								if (!stats.minId || stats.minId > item.id_str) {
 									stats.minId = item.id_str;
 								}
-								backupRelatedEntities(item);
 								saveNextItem();
 							}
 						});
@@ -287,146 +227,4 @@ function backupFromTwitter (endpoint, parameters, type, stats, callback) {
 			}
 		}
 	);
-}
-
-/**
- * Overwrite backup document. Called when initial put fails from conflict.
- */
-function overwriteBackup (_id, item, callback) {
-	db.view(
-		'backup/documents',
-		{ key : _id },
-		function (error, response) {
-			if (error) {
-				callback(error, response);
-			} else if (!response || response.length === 0) {
-				callback(null, false);
-			} else {
-				db.save(_id, item, function (error, response) {
-					if (error) {
-						callback(error, response);
-					} else {
-						callback(null, true);
-					}
-				});
-			}
-		}
-	);
-}
-
-/**
- * Fetch and save a single new tweet.
- */
-function backupTweet (id_str) {
-	var _id = twitUtil.getTweetId(id_str);
-	db.get(_id, function (error, doc) {
-		if (error && error.error === 'not_found') {
-			soopahviv.get(
-				'/statuses/show/' + id_str,
-				{
-					include_my_retweet : true
-				},
-				function (tweet) {
-					var user;
-					if (tweet instanceof Error) {
-						console.error('error fetching tweet ' + id_str + ': ' + tweet.toString());
-					} else {
-						user = tweet.user;
-						tweet.user = twitUtil.getTrimmedUser(user);
-						tweet.type = 'tweet';
-						db.put(_id, tweet, function (error, response) {
-							if (error) {
-								console.error('error saving tweet ' + id_str + ': ' + util.inspect(error));
-							}
-						});
-						db.saveOrUpdateUser(user);
-					}
-				}
-			);
-		}
-	});
-}
-
-/**
- * Save or update full user JSON.
- * Strips status subdocument if present.
- *
- * saveOrUpdateUser(user)
- */
-function saveOrUpdateUser (user) {
-	var _id = twitUtil.getUserId(user);
-	delete user.status;
-	user.type = 'user';
-	db.save(_id, user, function (error, response) {
-		if (error && error.error !== 'conflict') {
-			console.error('error saving user ' + _id + ': ' + util.inspect(error));
-		}
-	});
-}
-
-function backupRelatedEntities (tweet) {
-	if (tweet.in_reply_to_status_id_str) {
-		saveToBackupQueue(tweet.in_reply_to_status_id_str, 'tweet');
-	}
-	if (tweet.entities && tweet.entities.user_mentions) {
-		tweet.entities.user_mentions.forEach(function (userMention) {
-			saveToBackupQueue(userMention, 'user');
-		});
-	}
-}
-
-/**
- * Save id to shell document for future backup.
- *
- * saveToBackupQueue(entity, type)
- *
- * Accepted entity: object, id_str
- * Accepted type: tweet, user
- *
- * Backup queue document structure:
- * {
- *   _id         : "{type}:{id}",
- *   type        : "{type}",
- *   id_str      : "{id}",         // when present
- *   screen_name : "{screen_name}" // if "type":"user"
- *   needsBackup : true            // backup flag
- * }
- */
-function saveToBackupQueue (entity, type) {
-	var doc = {
-			type : type,
-			id_str : typeof entity === 'string' ? entity : entity.id_str,
-			screen_name : entity.screen_name,
-			needsBackup : true
-		};
-
-	function saveBackupDocument (_id) {
-		db.put(_id, doc, function (error, response) {
-			if (error && error.error !== 'conflict') {
-				console.error('error saving id ' + doc.id_str + ' to backup queue: ' + util.inspect(error));
-			}
-		});
-	}
-
-	if (doc.id_str) {
-		db.get(
-			twitUtil.getIdForType(doc.id_str, type),
-			function (error, response) {
-				if (error && error.error === 'not_found') {
-					saveBackupDocument(twitUtil.getIdForType(doc.id_str, type));
-				}
-			}
-		);
-	} else if (type === 'user') {
-		db.view(
-			'users/screenName',
-			{ key : entity.screen_name },
-			function (error, response) {
-				if (!response || response.length === 0) {
-					saveBackupDocument(twitUtil.getIdForType(entity.screen_name, type));
-					// TODO: processing screen_name-only users from queue need to delete and recreate with "_id":"user:{id}"
-				}
-			}
-		);
-	}
 }

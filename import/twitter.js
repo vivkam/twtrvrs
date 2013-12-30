@@ -8,6 +8,7 @@ var fs        = require('fs'),
 	util      = require('../lib/util-uber.js'),
 	twitUtil  = require('../lib/util-twitter.js'),
 	backup    = require('../backup/backup.js'),
+	persist   = require('../backup/persist.js'),
 	dir       = require('../lib/config.js').twitterExport.dir,
 	couch     = require('../database/couchdb.js'),
 	filenames = fs.readdirSync(dir),
@@ -49,21 +50,14 @@ function loadTweets () {
 }
 
 function loadTweet (tweet) {
-	var _id = twitUtil.getTweetId(tweet);
-	util.removeEmptyProperties(tweet);
 	tweet.created_at = formatDate(tweet.created_at);
-	tweet.user = twitUtil.getTrimmedUser(tweet.user);
-	tweet.type = 'tweet';
-	db.put(_id, tweet, function (error, response) {
+	persist.saveTweet(tweet, function (error, response) {
 		if (error && error.error === 'conflict') {
 			oldTweets++;
 		} else if (error) {
 			errors++;
-			console.error('error saving tweet ' + _id + ': ' + util.inspect(error));
 		} else {
 			newTweets++;
-			backup.saveToBackupQueue(tweet.user, 'user');
-			backup.backupRelatedEntities(tweet);
 		}
 	});
 }

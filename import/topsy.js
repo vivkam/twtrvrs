@@ -5,7 +5,7 @@
 var reader   = require('line-reader'),
 	util     = require('../lib/util-uber.js'),
 	twitUtil = require('../lib/util-twitter.js'),
-	backup   = require('../backup/backup.js'),
+	persist  = require('../backup/persist.js'),
 	dir      = require('../lib/config.js').topsyExport.dir,
 	couch    = require('../database/couchdb.js'),
 	db;
@@ -47,25 +47,14 @@ function loadSearch () {
 }
 
 function loadTweet (tweet, type, stats) {
-	var _id = twitUtil.getTweetId(tweet),
-		user;
 	if (!tweet.id_str) {
 		tweet.id_str = '' + tweet.id;
 	}
 	delete tweet.topsy;
-	if (type === 'mentions') {
-		user = tweet.user;
-		backup.saveOrUpdateUser(user);		
-	}
-	tweet.user = twitUtil.getTrimmedUser(tweet.user);
-	tweet.type = 'tweet';
-	util.removeEmptyProperties(tweet);
-	db.save(_id, tweet, function (error, response) {
+	persist.saveTweet(tweet, function (error, response) {
 		if (error) {
 			stats.errors++;
-			console.error('error loading ' + type + ' ' + tweet.id_str + ': ' + error.error);
 		} else {
-			backup.backupRelatedEntities(tweet);
 			stats.loaded++;
 		}
 		stats.tweetsProcessed++;
