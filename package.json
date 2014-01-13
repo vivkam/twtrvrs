@@ -9,7 +9,7 @@
 	"main" : "index.js",
 	"repository" : {
 		"type" : "git",
-		"url" : "git@bitbucket.org:vivkam/twitter-backup.git"
+		"url" : "git@github.com:vivkam/twtrvrs.git"
 	},
 	"keywords" : [ "twitter", "couchdb", "backup" ],
 	"dependencies" : {
