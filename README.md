@@ -35,7 +35,9 @@ TODO: this section
 Configuration
 -------------
 
-Edit config-default.json or override with config.json
+Edit config/default.json or override with config/development.json, config/production.json, etc.
+
+See [https://npmjs.org/package/config](https://npmjs.org/package/config).
 
 Implementation
 --------------

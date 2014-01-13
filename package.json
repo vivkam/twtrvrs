@@ -14,6 +14,7 @@
 	"keywords" : [ "twitter", "couchdb", "backup" ],
 	"dependencies" : {
 		"big-integer" : "",
+		"config" : "",
 		"cradle" : "",
 		"deepmerge" : "",
 		"line-reader" : "",

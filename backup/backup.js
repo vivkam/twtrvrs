@@ -2,11 +2,11 @@
  * Backup tweets via Twitter API.
  */
 
-var twitter   = require('twitter'),
+var config    = require('config').twitter,
+	twitter   = require('twitter'),
 	bigInt    = require('big-integer'),
 	util      = require('uber-util'),
 	persist   = require('./persist.js'),
-	config    = require('../lib/config.js').twitter,
 	twitUtil  = require('../lib/util-twitter.js'),
 	couch     = require('../database/couchdb.js'),
 	db        = couch.db,

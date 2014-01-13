@@ -11,7 +11,7 @@
  * Media is stored as tweet document attachments.
  */
 
-var config = require('../lib/config.js').twitter;
+var config = require('config').twitter;
 
 exports.createViews = createViews;
 

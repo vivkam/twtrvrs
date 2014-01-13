@@ -6,11 +6,11 @@
  * - dbReady (db): database ready for use
  */
  
-var util   = require('util'),
+var config = require('config').couchdb,
+	util   = require('util'),
 	events = require('events'),
 	cradle = require('cradle'),
 	views  = require('./views.js'),
-	config = require('../lib/config.js').couchdb,
 	couch,
 	db;
 
