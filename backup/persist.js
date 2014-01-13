@@ -2,7 +2,7 @@
  * Twitter entity persistence functions.
  */
 
-var util     = require('../lib/util-uber.js'),
+var util     = require('uber-util'),
 	twitUtil = require('../lib/util-twitter.js'),
 	db       = require('../database/couchdb.js').db;
 

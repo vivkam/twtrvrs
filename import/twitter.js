@@ -5,7 +5,7 @@
  */
 
 var fs        = require('fs'),
-	util      = require('../lib/util-uber.js'),
+	util      = require('uber-util'),
 	twitUtil  = require('../lib/util-twitter.js'),
 	backup    = require('../backup/backup.js'),
 	persist   = require('../backup/persist.js'),

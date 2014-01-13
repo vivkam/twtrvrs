@@ -4,9 +4,9 @@
 
 var twitter   = require('twitter'),
 	bigInt    = require('big-integer'),
+	util      = require('uber-util'),
 	persist   = require('./persist.js'),
 	config    = require('../lib/config.js').twitter,
-	util      = require('../lib/util-uber.js'),
 	twitUtil  = require('../lib/util-twitter.js'),
 	couch     = require('../database/couchdb.js'),
 	db        = couch.db,

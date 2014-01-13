@@ -17,6 +17,7 @@
 		"cradle" : "",
 		"deepmerge" : "",
 		"line-reader" : "",
-		"twitter" : ""
+		"twitter" : "",
+		"uber-util" : "vivkam/uber-util"
 	}
 }

@@ -3,7 +3,7 @@
  */
 
 var reader   = require('line-reader'),
-	util     = require('../lib/util-uber.js'),
+	util     = require('uber-util'),
 	twitUtil = require('../lib/util-twitter.js'),
 	persist  = require('../backup/persist.js'),
 	dir      = require('../lib/config.js').topsyExport.dir,
